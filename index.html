@@ -6,6 +6,7 @@
 -->
 <html>
 	<head>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBs5jnv7tbBX_lFyZiBKSVDvRkydhCM1ZM&callback=initMap" async defer></script>
 		<title>Predadores</title>
 
 		<meta charset="utf-8" />
@@ -23,7 +24,6 @@
                 navigator.serviceWorker.register('pwabuilder-sw.js')
             }
         </script>
-		<script>google.maps.event.addDomListener(window, 'load', initMap);</script> <!-- Chama a função initMap() quando a página carregar -->			
 	</head>
 
 	<body class="is-preload">
@@ -184,7 +184,6 @@
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
-			<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBs5jnv7tbBX_lFyZiBKSVDvRkydhCM1ZM&callback=initMap"></script>
 			<script src="scripts.js"></script>
 	</body>
 </html>
