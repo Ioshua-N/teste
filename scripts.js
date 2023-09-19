@@ -2,6 +2,9 @@
 var latitude;
 var longitude;
 
+// Variável global para armazenar o mapa
+var map;
+
 // Função para receber latitude e longitude
 if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(function (position) {
@@ -26,11 +29,11 @@ function initMap() {
         // Opções de configuração do mapa
         var mapOptions = {
             center: coordenadas,
-            zoom: 10, // Nível de zoom (0 a 21)
+            zoom: 15, // Nível de zoom (0 a 21)
         };
 
-        // Cria o objeto do mapa
-        var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+        // Cria o objeto do mapa e atribui à variável global map
+        map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
         // Adiciona um marcador para indicar a localização
         var marker = new google.maps.Marker({
@@ -43,32 +46,32 @@ function initMap() {
     }
 }
 
-// Exemplo de como carregar um arquivo GeoJSON usando fetch
-fetch('ucn_recife.geojson')
+fetch('academiadacidade.json')
   .then(response => response.json())
   .then(data => {
-    // Agora 'data' contém os dados GeoJSON
+    // Agora você tem acesso aos dados do JSON
+    console.log(data)
+    // Vamos percorrer os registros e criar marcadores no mapa
+    data.records.forEach(record => {
+      const latitude = record.latitude;
+      const longitude = record.longitude;
 
-    // Aqui, você deve adicionar os polígonos ao mapa
-    data.features.forEach(feature => {
-      const geometry = feature.geometry;
+      if (latitude && longitude) {
+        // Crie um objeto LatLng com as coordenadas
+        const coordenadas = new google.maps.LatLng(latitude, longitude);
 
-      if (geometry.type === 'MultiPolygon') {
-        // Se for um MultiPolygon, crie polígonos no mapa
-        const coordinates = geometry.coordinates;
+        // Opções de configuração do marcador
+        const markerOptions = {
+          position: coordenadas,
+          map: map, // Usa a variável global map aqui
+          title: record.nome_oficial // Use o nome oficial como título do marcador
+        };
 
-        coordinates.forEach(polygonCoordinates => {
-          // Criar um polígono no mapa sem preenchimento
-          const polygon = new google.maps.Polygon({
-            paths: polygonCoordinates[0].map(coord => ({ lat: coord[1], lng: coord[0] })),
-            map: map,
-            strokeColor: 'blue', // Cor da borda (azul)
-            strokeWeight: 2, // Espessura da borda
-          });
-        });
+        // Crie o marcador
+        const marker = new google.maps.Marker(markerOptions);
       }
     });
   })
   .catch(error => {
-    console.error('Erro ao carregar o arquivo GeoJSON:', error);
+    console.error('Erro ao obter dados do JSON: ', error);
   });
